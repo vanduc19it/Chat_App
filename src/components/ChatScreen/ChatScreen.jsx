@@ -7,7 +7,7 @@ function ChatScreen() {
   return (
     <Row>
       <Col span={6}><SideBar/></Col>
-      <Col span={6}><ChatRoom/></Col>
+      <Col span={18}><ChatRoom/></Col>
     </Row>
   )
 }
