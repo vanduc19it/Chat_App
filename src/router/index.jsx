@@ -4,11 +4,15 @@ import ChatScreen from "../components/ChatScreen/ChatScreen";
 import AuthProvider from "../context/AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import AppProvider from "../context/AppProvider";
 
 
 const AuthLayout = () => {
     return <AuthProvider>
-                <Outlet/>
+                <AppProvider>
+                    <Outlet/>
+                </AppProvider>
+                
             </AuthProvider>
 }
 export default createBrowserRouter([
