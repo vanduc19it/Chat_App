@@ -1,11 +1,15 @@
 import { UserAddOutlined, SendOutlined } from '@ant-design/icons'
 import { Alert, Avatar, Button, Col, Divider, Form, Input, Modal, Row, Select, Spin, Tooltip, Typography } from 'antd'
-import React, { useContext,  useState } from 'react'
+import React, { useContext,  useEffect,  useMemo,  useRef,  useState } from 'react'
 import Message from './Message'
 import { AppContext } from '../../context/AppProvider'
 import { debounce } from 'lodash'
 import { db } from '../../firebase/config'
-import { collection, doc, getDocs, limit,  orderBy, updateDoc, where } from 'firebase/firestore'
+import { addDoc, collection, doc, getDocs, limit,  orderBy, updateDoc, where } from 'firebase/firestore'
+import { addDocument } from '../../firebase/services'
+import { AuthContext } from '../../context/AuthProvider'
+import useFireStore from '../../Hooks/useFireStore'
+import styled from 'styled-components'
 
 
 function DebounceSelect({
@@ -119,6 +123,54 @@ export default function ChatRoom() {
     }   
    console.log('value',value)
 
+
+   const [inputValue, setInputValue] = useState('');
+    const {user} = useContext(AuthContext);
+    
+
+   const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+   }
+   const handleOnSubmit = () => {
+        addDocument('messages', {
+            text: inputValue,
+            uid: user.uid,
+            photoURL: user.photoURL,
+            roomId: selectedRoom.id,
+            displayName: user.displayName,
+        })
+
+        form.resetFields(['message']);
+
+   }   
+
+   const messagesCondition = useMemo(()=> {
+    return {
+        fieldName: 'roomId',
+        operator: '==',
+        compareValue: selectedRoom.id,
+    }
+    },[selectedRoom.id])
+
+    const messages = useFireStore('messages', messagesCondition)
+  
+
+    const MessageListStyled = styled.div`
+        max-height: 100%;
+        overflow-y: auto;
+    `;
+    const messageListRef = useRef(null);
+    useEffect(() => {
+        // scroll to bottom after message changed
+        if (messageListRef?.current) {
+          messageListRef.current.scrollTop =
+            messageListRef.current.scrollHeight + 50;
+        }
+      }, [messages]);
+    
+      console.log(messages)
+      const sortMessages = messages.sort((a,b)=>new Date(a.createdAt?.seconds) - new Date(b.createdAt?.seconds));
+      console.log(sortMessages)
   return (
    <>
     {/* <InviteFriendModal/> */}
@@ -141,16 +193,16 @@ export default function ChatRoom() {
     {
         selectedRoom.id ? (
             <>
-             <Row style={{borderBottom:"1px solid black" , height: '10vh', backgroundColor:'blue', padding:'20px 20px'}}>
+             <Row style={{borderBottom:"1px solid #ddd" , height: '10vh', backgroundColor:'#00ecff', padding:'20px 20px'}}>
         <Col span={18}>
-            <Typography>{selectedRoom?.name}</Typography>
+            <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{selectedRoom?.name}</Typography>
             <Typography>{selectedRoom?.description}</Typography>
         </Col>
         <Col span={3}>
             <Button ghost className="add-people"icon={<UserAddOutlined />} onClick={handleInviteFriend}>Invite</Button>
         </Col>
         <Col span={3}>
-            <Avatar.Group size="small" maxCount={2}>
+            <Avatar.Group size={30} maxCount={2}>
                 {members.map((member) =>
                 <Tooltip title={member.displayName} placement="top" key={member.id}>
                     <Avatar src={member.photoURL} >{member.photoURL ? '' : member.displayName.charAt(0)?.toUpperCase()}
@@ -163,25 +215,36 @@ export default function ChatRoom() {
   
         </Col>
     </Row>
-    <Row style={{borderBottom:"1px solid black" , height: '78vh', backgroundColor:'yellow', padding:'20px 20px', display: 'flex', flexDirection:"column", justifyContent: 'flex-end'}}>
-
-       
-            <Message text="hallo" photoURL='abc' name="duc van" createAt="12/11/2022"/>
-       
-       
-            <Message text="hallo" photoURL='abc' name="duc van" createAt="12/11/2022" />
-      
-       
-            <Message text="hallo" photoURL='abc' name="duc van" createAt="12/11/2022" />
-        
-        
+    <Row style={{borderBottom:"1px solid #ddd" , height: '78vh', backgroundColor:'white', padding:'20px 20px', display: 'flex', flexDirection:"column", justifyContent: 'flex-end'}}>
+    <MessageListStyled >
+        {
+            messages.map((message) =>
+                <Message 
+                
+                    key={message.id}
+                    text={message.text} 
+                    photoURL={message.photoURL} 
+                    name={message.displayName} 
+                    createdAt={message.createdAt}
+                />
+            )
+        }
+          </MessageListStyled>  
     </Row>
-    <Row style={{borderBottom:"1px solid black" , height: '12vh', backgroundColor:'purple', padding:'20px 20px'}}>
-        <Form style={{display:'flex'}}>
-            <Form.Item>
-                <Input size="large" style={{width:'65vw', marginRight:"10px"}}/>
+
+    <Row style={{borderBottom:"1px solid #ddd" , height: '12vh', backgroundColor:'#00ecff', padding:'20px 20px'}}>
+        <Form style={{display:'flex'}} form={form}>
+            <Form.Item name='message'>
+                <Input 
+                    size="large" 
+                    style={{width:'65vw', marginRight:"10px"}} 
+                    onChange={handleInputChange}
+                    onPressEnter={handleOnSubmit}
+                    placeholder='Type your message'
+                    autoComplete='off'
+                />
             </Form.Item>
-            <Button size="large" icon={<SendOutlined />}>Send</Button>
+            <Button size="large" icon={<SendOutlined />} onClick={handleOnSubmit} type="primary">Send</Button>
         </Form>
     </Row>
             </>

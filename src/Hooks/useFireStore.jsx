@@ -27,6 +27,7 @@ const  useFireStore = (collect, condition) => {
                     id:doc.id,
                 }))
                 
+               
                 setDocuments(documents);
               
             })
