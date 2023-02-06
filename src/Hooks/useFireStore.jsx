@@ -10,8 +10,6 @@ const  useFireStore = (collect, condition) => {
   useEffect(()=>{
 
     const collectionRef = collection(db, collect);
-    
-    console.log('colectionRef',collectionRef)
 
     if(condition) {
 
