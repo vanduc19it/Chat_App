@@ -10,7 +10,7 @@ export default function SideBar() {
 
     const { Panel } = Collapse;
     const {user} = useContext(AuthContext)
-    const {rooms, } = useContext(AppContext)
+    const {rooms,selectedRoomId, setSectedRoomId } = useContext(AppContext)
     const [isModalAddRoomOpen, setIsModalAddRoomOpen] = useState(false);
     const [form] = Form.useForm();
     const handleAddRoom = () => {
@@ -28,10 +28,7 @@ export default function SideBar() {
     const handleCancel = () => {
         form.resetFields();
         setIsModalAddRoomOpen(false);
-    }
-
-    console.log(isModalAddRoomOpen)
-    
+    }   
   
   return (
     <>
@@ -61,10 +58,10 @@ export default function SideBar() {
             <Collapse ghost defaultActiveKey={['1']} style={{width:"60%"}}>
                 <Panel header="List Rooms" key="1" style={{color: 'white', flex: '1', fontWeight:'bold'}}>
                     {
-                        rooms.map((room, index) => 
-                            <Row key={index} style={{padding:"5px 5px", display: 'flex', alignItems: 'center'}}>
+                        rooms.map((room) => 
+                            <Row key={room.id} style={{padding:"5px 5px", display: 'flex', alignItems: 'center'}}>
                                 <RightOutlined /> 
-                                <Typography.Link style={{display: 'flex', paddingLeft: '5px'}}>{room.name}</Typography.Link>
+                                <Typography.Link style={{display: 'flex', paddingLeft: '5px'}} onClick={()=> setSectedRoomId(room.id)}>{room.name}</Typography.Link>
                             </Row>
                         )
                     }

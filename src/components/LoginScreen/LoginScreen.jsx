@@ -4,8 +4,8 @@ import { auth, db } from '../../firebase/config'
 import { FacebookAuthProvider,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { AuthContext } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import { serverTimestamp, addDoc, collection } from 'firebase/firestore';
-import { addDocument } from '../../firebase/services';
+import { serverTimestamp, collection } from 'firebase/firestore';
+import { addDocument, generateKeywords } from '../../firebase/services';
 
 function LoginScreen() {
   const {user} = useContext(AuthContext);
@@ -14,22 +14,24 @@ function LoginScreen() {
   const handleFbLogin = async () => {
     const FbProvider = new FacebookAuthProvider();
     const res = await signInWithPopup(auth, FbProvider);
-    console.log(res);
+    
     if(res?._tokenResponse?.isNewUser) {
-      addDoc(collection(db, "users"), {
+      addDocument(collection(db, "users"), {
         displayName: res.user.displayName,
         email: res.user.email,
         photoURL: res.user.photoURL,
         uid: res.user.uid,
         providerId: res.providerId,
+        keywords: generateKeywords(res.user.displayName?.toLowerCase()),
       });
     }
+    
 
   }
   const handleGgLogin = async () => {
     const GgProvider = new GoogleAuthProvider();
     const res  = await signInWithPopup(auth, GgProvider);
-    console.log(res);
+   
     console.log(serverTimestamp())
     console.log(res?._tokenResponse?.isNewUser);
     if(res?._tokenResponse?.isNewUser) {
@@ -39,6 +41,7 @@ function LoginScreen() {
         photoURL: res.user.photoURL,
         uid: res.user.uid,
         providerId: res.providerId,
+        keywords: generateKeywords(res.user.displayName?.toLowerCase()),
       })
       
 
