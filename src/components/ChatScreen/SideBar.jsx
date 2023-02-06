@@ -44,24 +44,24 @@ export default function SideBar() {
             </Form>
         </Modal>
          {/* <AddRoomModal/> */}
-        <Row style={{padding:"20px 20px", backgroundColor:"#ccc", height:'10vh'}}>
-            <Col span={18} style={{display: 'flex'}}>
+        <Row style={{padding:"20px 20px", backgroundColor:"#0091ff", height:'10vh', borderBottom:"1px solid #ddd"}}>
+            <Col span={18} style={{display: 'flex', }}>
                 <Avatar style={{marginRight: '10px'}} size={40} src={`${user.photoURL}`}>{user.photoURL ? "" : user.displayName?.charAt(0)?.toUpperCase()}</Avatar>
-                <Typography style={{marginTop: '4px', fontSize: '16px'}} >{user.displayName}</Typography>
+                <Typography style={{marginTop: '4px', fontSize: '16px', fontWeight: 'bold', color:"#fff"}} >{user.displayName}</Typography>
             </Col>
             <Col span={6}>
                 <Button ghost onClick={()=> auth.signOut()}>Logout</Button>
             </Col>
         </Row>
-        <Row style={{padding:"20px 20px", backgroundColor:"green", height:'90vh', display: 'flex', justifyContent: 'space-between'}}>
+        <Row style={{padding:"20px 20px", backgroundColor:"#0091ff", height:'90vh', display: 'flex', justifyContent: 'space-between'}}>
             
             <Collapse ghost defaultActiveKey={['1']} style={{width:"60%"}}>
-                <Panel header="List Rooms" key="1" style={{color: 'white', flex: '1', fontWeight:'bold'}}>
+                <Panel header="Group Chat" key="1" style={{color: 'white', flex: '1', fontWeight:'bold', fontSize: "15px"}}>
                     {
                         rooms.map((room) => 
                             <Row key={room.id} style={{padding:"5px 5px", display: 'flex', alignItems: 'center'}}>
-                                <RightOutlined /> 
-                                <Typography.Link style={{display: 'flex', paddingLeft: '5px'}} onClick={()=> setSectedRoomId(room.id)}>{room.name}</Typography.Link>
+                                <RightOutlined style={{color: "#fff"}} /> 
+                                <Typography.Link style={{display: 'flex', paddingLeft: '5px', color: "white"}} onClick={()=> setSectedRoomId(room.id)}>{room.name}</Typography.Link>
                             </Row>
                         )
                     }
