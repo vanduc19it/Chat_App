@@ -63,14 +63,13 @@ const PanelStyled = styled(Panel)`
         </Modal>
          {/* <AddRoomModal/> */}
         <Row style={{padding:"20px 20px", backgroundColor:"#0091ff", height:'10vh', borderBottom:"1px solid #ddd"}}>
-            <Col style={{display: 'flex'}} sm={24} md={14} lg={16}>
+            <Col style={{display: 'flex'}} sm={24} md={14} lg={18}>
                 <Row>
-                    <Col sm={24} lg={10}>
-                    
-                    <Avatar style={{marginRight: '10px'}} size={40} src={`${user.photoURL}`}>{user.photoURL ? "" : user.displayName?.charAt(0)?.toUpperCase()}</Avatar>
+                    <Col sm={24} lg={8}>
+                    <Avatar style={{marginRight: '30px',}} size={36} src={`${user.photoURL}`}>{user.photoURL ? "" : user.displayName?.charAt(0)?.toUpperCase()}</Avatar>
                     </Col>
-                    <Col lg={14}>
-                    <Typography style={{marginTop: '4px', fontSize: '16px', fontWeight: 'bold', color:"#fff"}} >{user.displayName}</Typography>
+                    <Col lg={16}>
+                    <Typography style={{marginTop: '4px', fontSize: '14px', fontWeight: 'bold', color:"#fff"}} >{user.displayName}</Typography>
                     </Col>
                 </Row>
                
@@ -79,9 +78,9 @@ const PanelStyled = styled(Panel)`
                 <Button  ghost onClick={()=> auth.signOut()}>Logout</Button>
             </Col>
         </Row>
-        <Row style={{padding:"20px 10px", backgroundColor:"#0091ff", height:'90vh'}}>
+        <Row style={{padding:"20px 5px", backgroundColor:"#0091ff", height:'90vh'}}>
    
-                <Collapse ghost defaultActiveKey={['1']} style={{paddingTop: '20px'}}>
+                <Collapse ghost defaultActiveKey={['1']} style={{paddingTop: '20px', marginRight: '65px'}}>
                     <PanelStyled header="Group Chat" key="1" style={{color: 'white', flex: '1', fontWeight:'bold', fontSize: "15px"}}>
                         {
                             rooms.map((room) => 
@@ -96,7 +95,7 @@ const PanelStyled = styled(Panel)`
                 
                 </Collapse>
             
-                <Button style={{marginTop: '30px', marginLeft: '30px'}} ghost icon={<UsergroupAddOutlined /> } onClick={handleAddRoom}>Add room</Button>
+                <Button style={{marginTop: '30px', }} ghost icon={<UsergroupAddOutlined /> } onClick={handleAddRoom}>Add room</Button>
             
             
         </Row>
