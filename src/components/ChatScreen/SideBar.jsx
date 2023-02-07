@@ -5,6 +5,7 @@ import { auth } from '../../firebase/config'
 import { AuthContext } from '../../context/AuthProvider';
 import { AppContext } from '../../context/AppProvider';
 import { addDocument } from '../../firebase/services';
+import styled from 'styled-components';
 
 export default function SideBar() {
 
@@ -29,6 +30,23 @@ export default function SideBar() {
         form.resetFields();
         setIsModalAddRoomOpen(false);
     }   
+
+    
+const PanelStyled = styled(Panel)`
+&&& {
+    .ant-collapse {
+        width: 100%;
+    }
+  .ant-collapse-header,
+  p {
+    color: white;
+  }
+  .add-room {
+    color: white;
+    padding: 0;
+  }
+}
+`;
   
   return (
     <>
@@ -45,31 +63,42 @@ export default function SideBar() {
         </Modal>
          {/* <AddRoomModal/> */}
         <Row style={{padding:"20px 20px", backgroundColor:"#0091ff", height:'10vh', borderBottom:"1px solid #ddd"}}>
-            <Col span={18} style={{display: 'flex', }}>
-                <Avatar style={{marginRight: '10px'}} size={40} src={`${user.photoURL}`}>{user.photoURL ? "" : user.displayName?.charAt(0)?.toUpperCase()}</Avatar>
-                <Typography style={{marginTop: '4px', fontSize: '16px', fontWeight: 'bold', color:"#fff"}} >{user.displayName}</Typography>
+            <Col style={{display: 'flex'}} sm={24} md={14} lg={16}>
+                <Row>
+                    <Col sm={24} lg={10}>
+                    
+                    <Avatar style={{marginRight: '10px'}} size={40} src={`${user.photoURL}`}>{user.photoURL ? "" : user.displayName?.charAt(0)?.toUpperCase()}</Avatar>
+                    </Col>
+                    <Col lg={14}>
+                    <Typography style={{marginTop: '4px', fontSize: '16px', fontWeight: 'bold', color:"#fff"}} >{user.displayName}</Typography>
+                    </Col>
+                </Row>
+               
             </Col>
-            <Col span={6}>
-                <Button ghost onClick={()=> auth.signOut()}>Logout</Button>
+            <Col  sm={12} md={10} lg={6} >
+                <Button  ghost onClick={()=> auth.signOut()}>Logout</Button>
             </Col>
         </Row>
-        <Row style={{padding:"20px 20px", backgroundColor:"#0091ff", height:'90vh', display: 'flex', justifyContent: 'space-between'}}>
+        <Row style={{padding:"20px 10px", backgroundColor:"#0091ff", height:'90vh'}}>
+   
+                <Collapse ghost defaultActiveKey={['1']} style={{paddingTop: '20px'}}>
+                    <PanelStyled header="Group Chat" key="1" style={{color: 'white', flex: '1', fontWeight:'bold', fontSize: "15px"}}>
+                        {
+                            rooms.map((room) => 
+                                <Row key={room.id} style={{padding:"5px 5px", display: 'flex', alignItems: 'center'}}>
+                                    <RightOutlined style={{color: "#fff"}} /> 
+                                    <Typography.Link style={{ paddingLeft: '5px', color: "white"}} onClick={()=> setSectedRoomId(room.id)}>{room.name}</Typography.Link>
+                                </Row>
+                            )
+                        }
+                        
+                    </PanelStyled> 
+                
+                </Collapse>
             
-            <Collapse ghost defaultActiveKey={['1']} style={{width:"60%"}}>
-                <Panel header="Group Chat" key="1" style={{color: 'white', flex: '1', fontWeight:'bold', fontSize: "15px"}}>
-                    {
-                        rooms.map((room) => 
-                            <Row key={room.id} style={{padding:"5px 5px", display: 'flex', alignItems: 'center'}}>
-                                <RightOutlined style={{color: "#fff"}} /> 
-                                <Typography.Link style={{display: 'flex', paddingLeft: '5px', color: "white"}} onClick={()=> setSectedRoomId(room.id)}>{room.name}</Typography.Link>
-                            </Row>
-                        )
-                    }
-                    
-                </Panel> 
-               
-            </Collapse>
-            <Button ghost icon={<UsergroupAddOutlined /> } style={{marginTop:"10px"}} onClick={handleAddRoom}>Add room</Button>
+                <Button style={{marginTop: '30px', marginLeft: '30px'}} ghost icon={<UsergroupAddOutlined /> } onClick={handleAddRoom}>Add room</Button>
+            
+            
         </Row>
     </>
   )
