@@ -195,60 +195,86 @@ export default function ChatRoom() {
     {
         selectedRoom.id ? (
             <>
-             <Row style={{borderBottom:"1px solid #ddd" , height: '10vh', backgroundColor:'#00ecff', padding:'20px 20px'}}>
-        <Col span={18}>
-            <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{selectedRoom?.name}</Typography>
-            <Typography>{selectedRoom?.description}</Typography>
-        </Col>
-        <Col span={3}>
-            <Button ghost className="add-people"icon={<UserAddOutlined />} onClick={handleInviteFriend}>Invite</Button>
-        </Col>
-        <Col span={3}>
-            <Avatar.Group size={30} maxCount={2}>
-                {members.map((member) =>
-                <Tooltip title={member.displayName} placement="top" key={member.id}>
-                    <Avatar src={member.photoURL} >{member.photoURL ? '' : member.displayName.charAt(0)?.toUpperCase()}
-                    </Avatar>
-                </Tooltip>)}
-                
-               
-            </Avatar.Group>
-            <Divider />
-  
-        </Col>
-    </Row>
-    <Row style={{borderBottom:"1px solid #ddd" , height: '78vh', backgroundColor:'white', padding:'20px 20px', display: 'flex', flexDirection:"column", justifyContent: 'flex-end'}}>
-    <MessageListStyled >
-        {
-            messages.map((message) =>
-                <Message 
-                
-                    key={message.id}
-                    text={message.text} 
-                    photoURL={message.photoURL} 
-                    name={message.displayName} 
-                    createdAt={message.createdAt}
-                />
-            )
-        }
-          </MessageListStyled>  
-    </Row>
+              {/* header */}
+              <Row style={{
+                      borderBottom:"1px solid #ddd" , 
+                      height: '10vh', 
+                      backgroundColor:'#00ecff', 
+                      padding:'20px 20px', 
+                      width:"100%"
+                  }}
+              
+              >
+                <Col  xs={8}  md={16} lg={18}>
+                    <Typography style={{fontSize: '16px', fontWeight: 'bold'}}>{selectedRoom?.name}</Typography>
+                    <Typography>{selectedRoom?.description}</Typography>
+                </Col>
+                <Col xs={8}  md={4} lg={3} >
+                    <Button ghost className="add-people"icon={<UserAddOutlined />} onClick={handleInviteFriend}>Invite</Button>
+                </Col>
+                <Col xs={8} md={4} lg={3}>
+                    <Avatar.Group size={30} maxCount={2}>
+                        {members.map((member) =>
+                        <Tooltip title={member.displayName} placement="top" key={member.id}>
+                            <Avatar src={member.photoURL} >{member.photoURL ? '' : member.displayName.charAt(0)?.toUpperCase()}
+                            </Avatar>
+                        </Tooltip>)} 
+                      
+                    </Avatar.Group>
+                  
+                </Col>
+              </Row>
 
-    <Row style={{borderBottom:"1px solid #ddd" , height: '12vh', backgroundColor:'#00ecff', padding:'20px 20px'}}>
-        <Form style={{display:'flex'}} form={form}>
-            <Form.Item name='message'>
-                <Input 
-                    size="large" 
-                    style={{width:'65vw', marginRight:"10px"}} 
-                    onChange={handleInputChange}
-                    onPressEnter={handleOnSubmit}
-                    placeholder='Type your message'
-                    autoComplete='off'
-                />
-            </Form.Item>
-            <Button size="large" icon={<SendOutlined />} onClick={handleOnSubmit} type="primary">Send</Button>
-        </Form>
-    </Row>
+              {/* chat area */}
+              <Row 
+                  style={{
+                      borderBottom:"1px solid #ddd", 
+                      height: '78vh', 
+                      backgroundColor:'white', 
+                      padding:'20px 20px', 
+                      display: 'flex', 
+                      flexDirection:"column", 
+                      justifyContent: 'flex-end'
+                  }}
+              >
+                  <MessageListStyled >
+                      {
+                          messages.map((message) =>
+                              <Message 
+                                  key={message.id}
+                                  text={message.text} 
+                                  photoURL={message.photoURL} 
+                                  name={message.displayName} 
+                                  createdAt={message.createdAt}
+                              />
+                          )
+                      }
+                  </MessageListStyled>  
+              </Row>
+              {/* input */}
+              <Row style={{ height: '12vh', backgroundColor:'#00ecff', width:"75vw"}}>
+                
+                  <Form form={form} style={{display: 'flex', width:"100vw", margin: '20px 20px'}}>
+                
+                      <Form.Item name='message' style={{ marginRight:"10px", width:"100%"}}>
+                         
+                          <Input 
+                              size="large" 
+                              style={{width:'100%', }}
+                              onChange={handleInputChange}
+                              onPressEnter={handleOnSubmit}
+                              placeholder='Type your message'
+                              autoComplete='off'
+                              
+                          />
+                         
+                         </Form.Item>
+                      
+                      
+                      <Button size="large" icon={<SendOutlined />} onClick={handleOnSubmit} type="primary">Send</Button>
+                      
+                  </Form>
+              </Row>
             </>
         )
         :
