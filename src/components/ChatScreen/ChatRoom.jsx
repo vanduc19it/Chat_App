@@ -5,7 +5,7 @@ import Message from './Message'
 import { AppContext } from '../../context/AppProvider'
 import { debounce } from 'lodash'
 import { db } from '../../firebase/config'
-import { addDoc, collection, doc, getDocs, limit,  orderBy, updateDoc, where } from 'firebase/firestore'
+import { addDoc, collection, doc, getDocs, limit,  orderBy, query, updateDoc, where } from 'firebase/firestore'
 import { addDocument } from '../../firebase/services'
 import { AuthContext } from '../../context/AuthProvider'
 import useFireStore from '../../Hooks/useFireStore'
@@ -69,7 +69,7 @@ function DebounceSelect({
   //get user tu seacrh
   async function fetchUserList(search, curMembers) {
 
-    const q = await getDocs(collection(db, "users"), where('keywords', 'array-contains', search?.toLowerCase()), orderBy('displayName'),limit(20))
+    const q = await getDocs(query(collection(db, "users"), where('keywords', 'array-contains', search?.toLowerCase()), orderBy('displayName'),limit(20)))
     .then((snapshot) => {
             return snapshot.docs
               .map((doc) => ({
@@ -79,6 +79,8 @@ function DebounceSelect({
               }))
               .filter((opt) => !curMembers.includes(opt.value));
           });
+      
+      console.log("q", q)
 
     return q;
 
